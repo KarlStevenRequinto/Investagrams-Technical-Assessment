@@ -7,7 +7,11 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <Text style={styles.titleHeader}>What do you want to watch?</Text>
 
-      <CustomTextInput textInputContainerStyle={styles.textInputStyle} placeholder="Search" width={"100%"}/>
+      <CustomTextInput
+        textInputContainerStyle={styles.textInputStyle}
+        placeholder="Search"
+        width={"100%"}
+      />
       <View style={styles.trendingContainer}></View>
       <View style={styles.listsContainer}></View>
     </View>
@@ -17,18 +21,19 @@ const HomeScreen = () => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  container:{
-    paddingTop:30,
-    flex:1,
-    paddingHorizontal:24
+  container: {
+    backgroundColor: "#242A32",
+    paddingTop: 30,
+    flex: 1,
+    paddingHorizontal: 24,
   },
-  trendingContainer:{
-    flex:1,
-    backgroundColor:"red"
+  trendingContainer: {
+    flex: 1,
+    backgroundColor: "red",
   },
-  listsContainer:{
-    flex:1,
-    backgroundColor:"orange"
+  listsContainer: {
+    flex: 1,
+    backgroundColor: "orange",
   },
   titleHeader: {
     fontFamily: "Poppins-Regular",
