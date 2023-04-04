@@ -8,7 +8,7 @@ const CustomTextInput = ({
 }) => {
   return (
     <View style={[styles.container, textInputContainerStyle]}>
-      <TextInput placeholder={placeholder} placeholderTextColor={"#67686D"} />
+      <TextInput placeholder={placeholder} placeholderTextColor={"#67686D"} style={styles.placeholderText}/>
       <View style={styles.iconContainer}>{iconPlaceholder}</View>
     </View>
   );
@@ -20,7 +20,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#3A3F47",
     justifyContent: "center",
-    padding: 12,
+    paddingVertical: 8,
+    paddingHorizontal:12,
     borderRadius:8,
     flexDirection: "row",
   },
@@ -28,4 +29,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  placeholderText:{
+    fontFamily:"Poppins-Regular"
+  }
 });
