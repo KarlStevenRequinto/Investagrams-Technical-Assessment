@@ -1,20 +1,22 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import React from "react";
 
 const CustomTextInput = ({
   placeholder,
   iconPlaceholder,
   textInputContainerStyle,
+  width,
 }) => {
   return (
     <View style={[styles.container, textInputContainerStyle]}>
       <TextInput
         placeholder={placeholder}
         placeholderTextColor={"#67686D"}
-        style={styles.placeholderText}
+        style={[styles.placeholderText, { width: width }]}
       />
+    
       {iconPlaceholder && (
-        <View style={styles.iconContainer}>{iconPlaceholder}</View>
+        <Pressable style={styles.iconContainer}>{iconPlaceholder}</Pressable>
       )}
     </View>
   );
@@ -29,16 +31,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
     flexDirection: "row",
-    
   },
   iconContainer: {
-    position:"absolute",
+    position: "absolute",
+    right: 15,
+    bottom:12,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "red",
-  
   },
   placeholderText: {
     fontFamily: "Poppins-Regular",
+    color: "white",
   },
 });

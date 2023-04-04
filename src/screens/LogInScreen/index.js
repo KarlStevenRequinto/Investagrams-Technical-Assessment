@@ -1,8 +1,9 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import BackArrow from "../../../assets/icons/Back-Arrow";
 import CustomTextInput from "../../components/CustomTextInput";
-
+import CustomButton from "../../components/CustomButton";
+import Icon from "react-native-vector-icons/Entypo";
 const LogInScreen = () => {
   return (
     <View style={styles.container}>
@@ -11,19 +12,32 @@ const LogInScreen = () => {
         style={styles.image}
       />
       <View style={styles.loginSectionStyle}>
-        <View style={styles.headerContainer}>
+        <Pressable style={styles.headerContainer}>
           <BackArrow width={30} height={30} fill={"white"} />
           <Text style={styles.headerText}>Login</Text>
-        </View>
+        </Pressable>
         <Text style={styles.subText}>Enter your login credentials</Text>
 
-        <View>
+        <View style={styles.textInputContainer}>
+          {/* EMAIL VALIDATION NEEDED */}
           <Text style={styles.textInputTitle}>Email</Text>
-          <CustomTextInput placeholder="Enter your email"/>
+          <CustomTextInput placeholder="Enter your email" width={"100%"} />
         </View>
-        <View>
+        <View style={styles.textInputContainer}>
+          {/* PASSWORD VALIDATION NEEDED */}
           <Text style={styles.textInputTitle}>Password</Text>
-          <CustomTextInput placeholder="Enter your password" iconPlaceholder={<Text>asd</Text>}/>
+
+          {/* CHANGE ICON IF CLICKED */}
+          <CustomTextInput
+            placeholder="Enter your password"
+            iconPlaceholder={
+              <Icon name="eye-with-line" size={20} color="white" />
+            }
+            width={"100%"}
+          />
+        </View>
+        <View style={styles.btnContainer}>
+          <CustomButton btnTitle={"Login"} btnStyle={styles.loginBtnStyle} />
         </View>
       </View>
     </View>
@@ -33,11 +47,22 @@ const LogInScreen = () => {
 export default LogInScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, width: "100%" },
+  container: {
+    flex: 1,
+    width: "100%",
+  },
   headerContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "pink",
+  },
+  btnContainer: {
+    flex: 1,
+    paddingTop: 30,
+    marginVertical: 20,
+    alignItems: "center",
+  },
+  textInputContainer: {
+    marginTop: 12,
   },
   image: {
     width: "100%",
@@ -63,5 +88,10 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Regular",
     marginLeft: 45,
   },
-  textInputTitle: {},
+  textInputTitle: {
+    color: "white",
+    fontFamily: "Poppins-Regular",
+    fontSize: 16,
+    marginBottom: 4,
+  },
 });

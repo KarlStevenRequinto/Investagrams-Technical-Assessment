@@ -1,11 +1,11 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 
 const CustomButton = ({ onPressHandler, btnStyle, btnTitle, btnTextStyle }) => {
   return (
-    <Pressable style={[styles.btnContainer, btnStyle]} onPress={onPressHandler}>
+    <TouchableOpacity style={[styles.btnContainer, btnStyle]} onPress={onPressHandler}>
       <Text style={[styles.btnText, btnTextStyle]}>{btnTitle}</Text>
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 
@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
   btnText: {
     fontSize: 20,
     fontWeight: "500",
+    fontFamily: "Poppins-Regular",
     letterSpacing: 0.1,
   },
 });
