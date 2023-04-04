@@ -4,10 +4,11 @@ import CustomButton from "./src/components/CustomButton";
 import CustomTextInput from "./src/components/CustomTextInput";
 import { useFonts } from "expo-font";
 import LogInScreen from "./src/screens/LogInScreen";
+import HomeScreen from "./src/screens/HomeScreen";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
-    "Poppins-Regular": require("./assets/fonts/Poppins-Regular.ttf")
+    "Poppins-Regular": require("./assets/fonts/Poppins-Regular.ttf"),
   });
 
   if (!fontsLoaded) {
@@ -17,7 +18,8 @@ export default function App() {
   return (
     <View style={styles.container}>
       {/* <Text>Open up App.js to start working on your app!</Text> */}
-      <LogInScreen/>
+      {/* <LogInScreen/> */}
+      <HomeScreen />
       <StatusBar style="auto" />
     </View>
   );
