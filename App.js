@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import CustomButton from "./src/components/CustomButton";
 import CustomTextInput from "./src/components/CustomTextInput";
 import { useFonts } from "expo-font";
+import LogInScreen from "./src/screens/LogInScreen";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -15,8 +16,8 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <CustomTextInput placeholder="Enter your email" />
+      {/* <Text>Open up App.js to start working on your app!</Text> */}
+      <LogInScreen/>
       <StatusBar style="auto" />
     </View>
   );
@@ -25,7 +26,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#242A32",
     alignItems: "center",
     justifyContent: "center",
   },
