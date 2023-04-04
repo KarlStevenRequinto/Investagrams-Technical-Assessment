@@ -1,12 +1,30 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { useEffect, useState } from "react";
 import CustomTextInput from "../../components/CustomTextInput";
+import { getTrending } from "../../utils/api-calls";
 
 const HomeScreen = () => {
+  const [trendingList, setTrendingList] = useState([]);
+  useEffect(() => {
+    getTrending()
+      .then((response) => response.json())
+      .then((result) => {
+        const items = result.results.map((item) => {
+          return item;
+        });
+        setTrendingList(items);
+      })
+      .catch((error) => console.log("error", error));
+  }, []);
+
+  useEffect(() => {
+    console.log(trendingList);
+  }, [trendingList]);
   return (
     <View style={styles.container}>
       <Text style={styles.titleHeader}>What do you want to watch?</Text>
 
+      {/* SEARCH MOVIES BY TITLE */}
       <CustomTextInput
         textInputContainerStyle={styles.textInputStyle}
         placeholder="Search"

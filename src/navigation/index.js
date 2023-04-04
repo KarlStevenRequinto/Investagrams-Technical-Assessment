@@ -16,11 +16,11 @@ const Tabs = createMaterialBottomTabNavigator();
 const RootNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Home"
+      initialRouteName="HomeTab"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Login" component={LogInScreen} />
-      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="HomeTab" component={HomeTabs} />
       <Stack.Screen name="Details" component={DetailsScreen} />
       <Stack.Screen name="Watchlist" component={WatchlistScreen} />
     </Stack.Navigator>
@@ -29,7 +29,7 @@ const RootNavigator = () => {
 
 const HomeTabs = () => {
   return (
-    <Tabs.Navigator>
+    <Tabs.Navigator barStyle={{backgroundColor:"#242A32",borderTopWidth:1,borderTopColor:"white"}}>
       <Tabs.Screen
         name="Home"
         component={HomeScreen}
@@ -51,4 +51,4 @@ const HomeTabs = () => {
     </Tabs.Navigator>
   );
 };
-export default HomeTabs;
+export default RootNavigator;
