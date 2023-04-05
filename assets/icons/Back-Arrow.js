@@ -11,8 +11,8 @@ const BackArrow = ({fill,width,height}) => {
       xmlns="http://www.w3.org/2000/svg"
     >
       <Path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M10.4987 0.657459L11.9336 2.09229L3.58555 10.4403L11.9336 18.7883L10.4987 20.2231L0.717285 10.4417L10.4987 0.657459Z"
         fill={fill}
       />

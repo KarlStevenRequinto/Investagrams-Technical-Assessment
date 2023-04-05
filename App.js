@@ -4,10 +4,12 @@ import { useFonts } from "expo-font";
 import HomeScreen from "./src/screens/HomeScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import RootNavigator from "./src/navigation";
+import DetailsScreen from "./src/screens/DetailsScreen";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
     "Poppins-Regular": require("./assets/fonts/Poppins-Regular.ttf"),
+    "Montserrat-Font": require("./assets/fonts/Montserrat-VariableFont_wght.ttf"),
   });
 
   if (!fontsLoaded) {
@@ -15,13 +17,14 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      {/* <View style={styles.container}> */}
-        <RootNavigator/>
-        {/* <HomeScreen /> */}
-        <StatusBar style="light" />
-      {/* </View> */}
-    </NavigationContainer>
+    // <NavigationContainer>
+    //   {/* <View style={styles.container}> */}
+    //     <RootNavigator/>
+    //     {/* <HomeScreen /> */}
+    //     <StatusBar style="light" />
+    //   {/* </View> */}
+    // </NavigationContainer>
+    <DetailsScreen />
   );
 }
 
