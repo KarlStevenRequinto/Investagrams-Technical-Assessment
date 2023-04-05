@@ -16,6 +16,7 @@ import {
   getPopular,
   getTopRated,
 } from "../../utils/api-calls";
+import { useNavigation } from "@react-navigation/native";
 
 const HomeScreen = () => {
   const [trendingList, setTrendingList] = useState([]);
@@ -27,15 +28,7 @@ const HomeScreen = () => {
   const indicatorPosition = useRef(new Animated.Value(0)).current;
 
   const buttonWidth = containerWidth / 3;
-
-  const handlePress = (index) => {
-    setSelectedButtonIndex(index);
-    Animated.timing(indicatorPosition, {
-      toValue: index,
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
-  };
+  const navigation = useNavigation();
 
   useEffect(() => {
     getTrending()
@@ -70,6 +63,19 @@ const HomeScreen = () => {
       });
   }, []);
 
+  const handlePress = (index) => {
+    setSelectedButtonIndex(index);
+    Animated.timing(indicatorPosition, {
+      toValue: index,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  const onRoutePress = (id) => {
+    console.log(id);
+    navigation.navigate("Details", { id: id });
+  };
   useEffect(() => {
     getPopular()
       .then((response) => response.json())
@@ -125,7 +131,12 @@ const HomeScreen = () => {
           data={trendingList}
           renderItem={({ item, index }) => {
             return (
-              <View style={styles.imageContainer}>
+              <TouchableOpacity
+                style={styles.imageContainer}
+                onPress={() => {
+                  onRoutePress(item.id);
+                }}
+              >
                 <Image
                   source={`https://image.tmdb.org/t/p/w500/${item.backdrop}`}
                   contentFit="cover"
@@ -133,7 +144,7 @@ const HomeScreen = () => {
                   style={styles.image}
                 />
                 <Text style={styles.imgIndex}>{index + 1}</Text>
-              </View>
+              </TouchableOpacity>
             );
           }}
           horizontal
@@ -251,7 +262,7 @@ const styles = StyleSheet.create({
   },
   listsContainer: {
     flex: 1,
-    backgroundColor: "orange",
+    // backgroundColor: "orange",
     overflow: "hidden",
   },
   titleHeader: {
@@ -268,7 +279,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     paddingBottom: 20,
     paddingLeft: 15,
-    backgroundColor: "pink",
+    // backgroundColor: "pink",
     marginHorizontal: 4,
   },
   image: {
@@ -283,12 +294,12 @@ const styles = StyleSheet.create({
     fontSize: 150,
     fontFamily: "Poppins-Regular",
     lineHeight: 150,
-    backgroundColor: "red",
+    // backgroundColor: "red",
   },
   bottomHeaders: {
     marginTop: 5,
     flexDirection: "row",
-    backgroundColor: "yellow",
+    // backgroundColor: "yellow",
     alignItems: "center",
     justifyContent: "space-around",
   },
@@ -300,13 +311,13 @@ const styles = StyleSheet.create({
   indicator: {
     position: "absolute",
     bottom: -12,
-    height: 8,
+    height: 4,
     width: "33.33%",
     borderRadius: 8,
     backgroundColor: "white",
   },
   bottomContent: {
     marginTop: 15,
-    backgroundColor: "skyblue",
+    // backgroundColor: "skyblue",
   },
 });

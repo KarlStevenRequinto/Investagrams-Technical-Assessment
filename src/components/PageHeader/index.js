@@ -3,14 +3,14 @@ import React from "react";
 import BackArrow from "../../../assets/icons/Back-Arrow";
 import BookMark from "../../../assets/icons/BookMark";
 
-const PageHeader = () => {
+const PageHeader = ({ goBackPress, bookMarkPress }) => {
   return (
     <View style={styles.container}>
-      <Pressable>
+      <Pressable onPress={goBackPress}>
         <BackArrow fill="white" width={20} height={20} />
       </Pressable>
       <Text style={styles.headerText}>Detail</Text>
-      <Pressable>
+      <Pressable onPress={bookMarkPress}>
         <BookMark fill="white" width={18} height={24} />
       </Pressable>
     </View>
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor:"pink"
+    backgroundColor: "pink",
   },
   headerText: {
     color: "white",

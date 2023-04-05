@@ -17,14 +17,13 @@ export default function App() {
   }
 
   return (
-    // <NavigationContainer>
-    //   {/* <View style={styles.container}> */}
-    //     <RootNavigator/>
-    //     {/* <HomeScreen /> */}
-    //     <StatusBar style="light" />
-    //   {/* </View> */}
-    // </NavigationContainer>
-    <DetailsScreen />
+    <NavigationContainer>
+      {/* <View style={styles.container}> */}
+      <RootNavigator />
+      {/* <HomeScreen /> */}
+      <StatusBar style="light" />
+      {/* </View> */}
+    </NavigationContainer>
   );
 }
 
