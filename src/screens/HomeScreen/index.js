@@ -185,7 +185,12 @@ const HomeScreen = () => {
               data={upcomingList}
               renderItem={({ item }) => {
                 return (
-                  <TouchableOpacity style={{ marginRight: 10, marginTop: 10 }}>
+                  <TouchableOpacity
+                    style={{ marginRight: 10, marginTop: 10 }}
+                    onPress={() => {
+                      onRoutePress(item.id);
+                    }}
+                  >
                     <Image
                       source={`https://image.tmdb.org/t/p/w500/${item.backdrop}`}
                       contentFit="cover"
@@ -205,7 +210,12 @@ const HomeScreen = () => {
               data={popularList}
               renderItem={({ item }) => {
                 return (
-                  <TouchableOpacity style={{ marginRight: 10, marginTop: 10 }}>
+                  <TouchableOpacity
+                    style={{ marginRight: 10, marginTop: 10 }}
+                    onPress={() => {
+                      onRoutePress(item.id);
+                    }}
+                  >
                     <Image
                       source={`https://image.tmdb.org/t/p/w500/${item.backdrop}`}
                       contentFit="cover"
@@ -225,7 +235,12 @@ const HomeScreen = () => {
               data={topRatedList}
               renderItem={({ item }) => {
                 return (
-                  <TouchableOpacity style={{ marginRight: 10, marginTop: 10 }}>
+                  <TouchableOpacity
+                    style={{ marginRight: 10, marginTop: 10 }}
+                    onPress={() => {
+                      onRoutePress(item.id);
+                    }}
+                  >
                     <Image
                       source={`https://image.tmdb.org/t/p/w500/${item.backdrop}`}
                       contentFit="cover"
