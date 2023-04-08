@@ -1,5 +1,4 @@
 import { Path, Svg } from "react-native-svg";
-import React from "react";
 
 const Star = ({ width, height, stroke,fill }) => {
   return (

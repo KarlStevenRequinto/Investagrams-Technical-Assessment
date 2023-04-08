@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Animated,
   Pressable,
+  Modal,
 } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
 import PageHeader from "../../components/PageHeader";
@@ -16,6 +17,8 @@ import Clock from "../../../assets/icons/Clock";
 import CalendarIcon from "../../../assets/icons/CalendarIcon";
 import CustomButton from "../../components/CustomButton";
 import Heart from "../../../assets/icons/Heart";
+import StarRating from "../../../assets/icons/StarRating";
+import styles from "./styles";
 
 const DetailsScreen = () => {
   const route = useRoute();
@@ -23,6 +26,7 @@ const DetailsScreen = () => {
   const navigation = useNavigation();
   const [containerWidth, setContainerWidth] = useState(0);
   const [selectedButtonIndex, setSelectedButtonIndex] = useState(0);
+  const [openModal, setOpenModal] = useState(false);
   const [watchlisted, setWatchlisted] = useState(false);
   const [movieObj, setMovieObj] = useState({
     id: "",
@@ -37,7 +41,7 @@ const DetailsScreen = () => {
   });
   const indicatorPosition = useRef(new Animated.Value(0)).current;
   const buttonWidth = containerWidth / 2.6;
-
+  const stars = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   useEffect(() => {
     getMovieDetails(movieId)
       .then((response) => response.json())
@@ -157,9 +161,16 @@ const DetailsScreen = () => {
               borderWidth: 2,
               borderColor: "#0296E5",
             }}
+            onPress={() => {
+              setOpenModal(true);
+            }}
           >
             <Star width={20} height={20} stroke="#0296E5" fill="none" />
-            <Text style={[styles.headerText, { color: "#0296E5",marginLeft:4 }]}>Rate</Text>
+            <Text
+              style={[styles.headerText, { color: "#0296E5", marginLeft: 4 }]}
+            >
+              Rate
+            </Text>
           </TouchableOpacity>
 
           <Animated.View
@@ -196,121 +207,46 @@ const DetailsScreen = () => {
           navigation.navigate("Watchlist");
         }}
       />
+
+      <Modal visible={openModal} transparent={true} animationType="fade">
+        <Pressable
+          style={styles.modalContainer}
+          onPress={() => {
+            setOpenModal(false);
+          }}
+        >
+          <View style={styles.modalContent}>
+            <View style={{ position: "absolute", top: -40 }}>
+              <StarRating fill="#0296E5" />
+              {/* rating number should be dynamic */}
+              <Text
+                style={{
+                  position: "absolute",
+                  top: "39%",
+                  left: "44%",
+                  fontSize: 20,
+                  color: "white",
+                  fontFamily: "Montserrat-Font",
+                }}
+              >
+                ?
+              </Text>
+            </View>
+            <Text style={styles.rateThis}>RATE THIS</Text>
+            <Text style={styles.ratingTitle}>{movieObj?.title}</Text>
+            <View style={{ flexDirection: "row" }}>
+              {stars.map(() => {
+                return (
+                  <Star width={30} height={30} stroke="white" fill="none" />
+                );
+              })}
+            </View>
+            <CustomButton btnTitle="Rate" btnStyle={styles.ratingBtn} />
+          </View>
+        </Pressable>
+      </Modal>
     </View>
   );
 };
 
 export default DetailsScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingVertical: 30,
-    paddingHorizontal: 24,
-    backgroundColor: "#242A32",
-  },
-  posterContainer: { marginTop: 30 },
-  coverPhotoContainer: {
-    overflow: "hidden",
-    borderBottomRightRadius: 16,
-    borderBottomLeftRadius: 16,
-  },
-  image: {
-    width: "100%",
-    height: 400,
-  },
-  posterImage: {
-    position: "absolute",
-    bottom: 0,
-    left: 30,
-  },
-  poster: {
-    width: 95,
-    height: 120,
-  },
-  ratingContainer: {
-    position: "absolute",
-    bottom: 12,
-    right: 12,
-    backgroundColor: "rgba(37, 40, 54, 0.32)",
-    flexDirection: "row",
-    paddingHorizontal: 8,
-    paddingVertical: 5,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  descContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 8,
-    marginTop: 16,
-    marginBottom: 24,
-  },
-  ratingText: {
-    color: "#FF8700",
-    fontFamily: "Montserrat-Font",
-    fontSize: 12,
-    fontWeight: "600",
-    lineHeight: 14.63,
-    letterSpacing: 0.12,
-    marginLeft: 4,
-  },
-  movieTitle: {
-    fontFamily: "Poppins-Regular",
-    fontSize: 18,
-    fontWeight: "600",
-    lineHeight: 27,
-    color: "white",
-    marginLeft: 137,
-  },
-  titleContainer: {
-    height: 60,
-    justifyContent: "center",
-  },
-  headerDescription: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  bottomHeaders: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-around",
-  },
-  headerText: {
-    fontSize: 20,
-    fontFamily: "Poppins-Regular",
-    color: "white",
-  },
-  indicator: {
-    position: "absolute",
-    bottom: -12,
-    height: 4,
-    borderRadius: 8,
-    backgroundColor: "#3A3F47",
-  },
-  bottomContent: {
-    marginTop: 35,
-  },
-  about: {
-    fontFamily: "Poppins-Regular",
-    fontWeight: "400",
-    fontSize: 14,
-    lineHeight: 18,
-    color: "white",
-  },
-  watchlistBtn: {
-    width: "90%",
-    alignSelf: "center",
-  },
-  descriptionText: {
-    fontFamily: "Montserrat-Font",
-    fontWeight: "500",
-    fontSize: 14,
-    letterSpacing: 0.12,
-    lineHeight: 14.63,
-    marginHorizontal: 8,
-    color: "#92929D",
-  },
-});
