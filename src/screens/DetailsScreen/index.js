@@ -1,5 +1,4 @@
 import {
-  StyleSheet,
   Text,
   View,
   TouchableOpacity,
@@ -7,27 +6,27 @@ import {
   Pressable,
   Modal,
 } from "react-native";
-import React, { useEffect, useState, useRef } from "react";
-import PageHeader from "../../components/PageHeader";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useEffect, useState, useRef, useContext } from "react";
 import { getMovieDetails } from "../../utils/api-calls";
 import { Image } from "expo-image";
+import { WatchlistContext } from "../../../store/context";
+import PageHeader from "../../components/PageHeader";
 import Star from "../../../assets/icons/Star";
 import Clock from "../../../assets/icons/Clock";
 import CalendarIcon from "../../../assets/icons/CalendarIcon";
 import CustomButton from "../../components/CustomButton";
 import Heart from "../../../assets/icons/Heart";
 import StarRating from "../../../assets/icons/StarRating";
+import BookMark from "../../../assets/icons/BookMark";
 import styles from "./styles";
 
-const DetailsScreen = () => {
-  const route = useRoute();
+const DetailsScreen = ({ route, navigation }) => {
+  const watchListsCtx = useContext(WatchlistContext);
   const movieId = route.params.id;
-  const navigation = useNavigation();
+
   const [containerWidth, setContainerWidth] = useState(0);
   const [selectedButtonIndex, setSelectedButtonIndex] = useState(0);
   const [openModal, setOpenModal] = useState(false);
-  const [watchlisted, setWatchlisted] = useState(false);
   const [movieObj, setMovieObj] = useState({
     id: "",
     coverPhoto: "",
@@ -42,6 +41,8 @@ const DetailsScreen = () => {
   const indicatorPosition = useRef(new Animated.Value(0)).current;
   const buttonWidth = containerWidth / 2.6;
   const stars = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const movieIsWatchListed = watchListsCtx.ids.includes(movieId);
+
   useEffect(() => {
     getMovieDetails(movieId)
       .then((response) => response.json())
@@ -70,12 +71,25 @@ const DetailsScreen = () => {
     }).start();
   };
 
+  const watchListStatusHandler = () => {
+    console.log(movieIsWatchListed);
+    if (movieIsWatchListed) {
+      console.log("delete was called")
+      watchListsCtx.removeWatchList(movieId);
+    } else {
+      console.log("add was called")
+      watchListsCtx.addWatchList(movieId);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <PageHeader
         goBackPress={() => {
           navigation.goBack();
         }}
+        screen="Detail"
+        children={<BookMark fill="white" width={18} height={24} />}
       />
 
       <View style={styles.posterContainer}>
@@ -127,15 +141,13 @@ const DetailsScreen = () => {
           </Text>
           <Pressable
             style={{ marginLeft: 20 }}
-            onPress={() => {
-              setWatchlisted(!watchlisted);
-            }}
+            onPress={watchListStatusHandler}
           >
             <Heart
               width={30}
               height={30}
               stroke="#FF8700"
-              fill={watchlisted ? "#FF8700" : "none"}
+              fill={movieIsWatchListed ? "#FF8700" : "none"}
             />
           </Pressable>
         </View>
@@ -235,9 +247,15 @@ const DetailsScreen = () => {
             <Text style={styles.rateThis}>RATE THIS</Text>
             <Text style={styles.ratingTitle}>{movieObj?.title}</Text>
             <View style={{ flexDirection: "row" }}>
-              {stars.map(() => {
+              {stars.map((item, index) => {
                 return (
-                  <Star width={30} height={30} stroke="white" fill="none" />
+                  <Star
+                    key={index}
+                    width={30}
+                    height={30}
+                    stroke="white"
+                    fill="none"
+                  />
                 );
               })}
             </View>

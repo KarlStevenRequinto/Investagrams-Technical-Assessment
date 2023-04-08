@@ -136,7 +136,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     letterSpacing: 0.12,
     lineHeight: 16,
-    backgroundColor:"red"
   },
   ratingTitle:{
     fontFamily:"Poppins-Regular",

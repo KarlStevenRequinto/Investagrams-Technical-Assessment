@@ -1,10 +1,9 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
 import { useFonts } from "expo-font";
-import HomeScreen from "./src/screens/HomeScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import RootNavigator from "./src/navigation";
-import DetailsScreen from "./src/screens/DetailsScreen";
+import WatchlistContextProvider from "./store/context";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -17,13 +16,15 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      {/* <View style={styles.container}> */}
-      <RootNavigator />
-      {/* <HomeScreen /> */}
-      <StatusBar style="light" />
-      {/* </View> */}
-    </NavigationContainer>
+    <WatchlistContextProvider>
+      <NavigationContainer>
+        {/* <View style={styles.container}> */}
+        <RootNavigator />
+        {/* <HomeScreen /> */}
+        <StatusBar style="light" />
+        {/* </View> */}
+      </NavigationContainer>
+    </WatchlistContextProvider>
   );
 }
 

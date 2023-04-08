@@ -2,17 +2,16 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import BackArrow from "../../../assets/icons/Back-Arrow";
 import BookMark from "../../../assets/icons/BookMark";
+import Star from "../../../assets/icons/Star";
 
-const PageHeader = ({ goBackPress, bookMarkPress }) => {
+const PageHeader = ({ goBackPress, iconPress, children, screen }) => {
   return (
     <View style={styles.container}>
       <Pressable onPress={goBackPress}>
         <BackArrow fill="white" width={20} height={20} />
       </Pressable>
-      <Text style={styles.headerText}>Detail</Text>
-      <Pressable onPress={bookMarkPress}>
-        <BookMark fill="white" width={18} height={24} />
-      </Pressable>
+      <Text style={styles.headerText}>{screen}</Text>
+      <Pressable onPress={iconPress}>{children}</Pressable>
     </View>
   );
 };

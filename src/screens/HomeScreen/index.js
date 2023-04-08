@@ -270,11 +270,9 @@ const styles = StyleSheet.create({
   trendingContainer: {
     flex: 1.5,
     marginTop: 12,
-    // backgroundColor: "red",
   },
   listsContainer: {
     flex: 1,
-    // backgroundColor: "orange",
     overflow: "hidden",
   },
   titleHeader: {
