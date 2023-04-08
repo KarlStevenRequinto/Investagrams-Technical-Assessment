@@ -1,5 +1,12 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Animated,
+  Pressable,
+} from "react-native";
+import React, { useEffect, useState, useRef } from "react";
 import PageHeader from "../../components/PageHeader";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { getMovieDetails } from "../../utils/api-calls";
@@ -7,13 +14,16 @@ import { Image } from "expo-image";
 import Star from "../../../assets/icons/Star";
 import Clock from "../../../assets/icons/Clock";
 import CalendarIcon from "../../../assets/icons/CalendarIcon";
-import Ticket from "../../../assets/icons/Ticket";
+import CustomButton from "../../components/CustomButton";
+import Heart from "../../../assets/icons/Heart";
 
 const DetailsScreen = () => {
   const route = useRoute();
   const movieId = route.params.id;
   const navigation = useNavigation();
-
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [selectedButtonIndex, setSelectedButtonIndex] = useState(0);
+  const [watchlisted, setWatchlisted] = useState(false);
   const [movieObj, setMovieObj] = useState({
     id: "",
     coverPhoto: "",
@@ -25,6 +35,9 @@ const DetailsScreen = () => {
     about: "",
     rating: "",
   });
+  const indicatorPosition = useRef(new Animated.Value(0)).current;
+  const buttonWidth = containerWidth / 2.6;
+
   useEffect(() => {
     getMovieDetails(movieId)
       .then((response) => response.json())
@@ -43,6 +56,16 @@ const DetailsScreen = () => {
         setMovieObj(movie);
       });
   }, []);
+
+  const handlePress = (index) => {
+    setSelectedButtonIndex(index);
+    Animated.timing(indicatorPosition, {
+      toValue: index,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  };
+
   return (
     <View style={styles.container}>
       <PageHeader
@@ -80,21 +103,99 @@ const DetailsScreen = () => {
         </View>
       </View>
 
-      <View
-        style={{
-          backgroundColor: "red",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+      <View style={styles.descContainer}>
         <View style={styles.headerDescription}>
           <CalendarIcon width={18} height={18} stroke="#92929D" />
-          <Text>{movieObj?.releaseDate.split("-")[0]}</Text>
-          <Text>|</Text>
+          <Text style={styles.descriptionText}>
+            {movieObj?.releaseDate.split("-")[0]}
+          </Text>
+          <Text
+            style={[
+              styles.descriptionText,
+              { marginHorizontal: 10, marginBottom: 2 },
+            ]}
+          >
+            |
+          </Text>
           <Clock width={18} height={18} stroke="#92929D" />
-          <Text>{movieObj?.runtime} Minutes</Text>
+          <Text style={styles.descriptionText}>
+            {movieObj?.runtime} Minutes
+          </Text>
+          <Pressable
+            style={{ marginLeft: 20 }}
+            onPress={() => {
+              setWatchlisted(!watchlisted);
+            }}
+          >
+            <Heart
+              width={30}
+              height={30}
+              stroke="#FF8700"
+              fill={watchlisted ? "#FF8700" : "none"}
+            />
+          </Pressable>
         </View>
       </View>
+
+      <View
+        style={{ flex: 1, overflow: "hidden" }}
+        onLayout={(event) => setContainerWidth(event.nativeEvent.layout.width)}
+      >
+        <View style={styles.bottomHeaders}>
+          <TouchableOpacity onPress={() => handlePress(0)}>
+            <Text style={styles.headerText}>About Movie</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handlePress(1)}>
+            <Text style={styles.headerText}>Reviews</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingHorizontal: 12,
+              borderRadius: 8,
+              borderWidth: 2,
+              borderColor: "#0296E5",
+            }}
+          >
+            <Star width={20} height={20} stroke="#0296E5" fill="none" />
+            <Text style={[styles.headerText, { color: "#0296E5",marginLeft:4 }]}>Rate</Text>
+          </TouchableOpacity>
+
+          <Animated.View
+            style={[
+              styles.indicator,
+              {
+                width: buttonWidth,
+                left: indicatorPosition.interpolate({
+                  inputRange: [0, 1, 2],
+                  outputRange: [0, buttonWidth, buttonWidth * 2],
+                }),
+              },
+            ]}
+          />
+        </View>
+
+        {selectedButtonIndex === 0 ? (
+          <View style={styles.bottomContent}>
+            <Text style={styles.about}>{movieObj?.about}</Text>
+          </View>
+        ) : (
+          selectedButtonIndex === 1 && (
+            <View style={styles.bottomContent}>
+              <Text>selectedButtonIndex 2</Text>
+            </View>
+          )
+        )}
+      </View>
+
+      <CustomButton
+        btnTitle="Go To Watchlist"
+        btnStyle={styles.watchlistBtn}
+        onPressHandler={() => {
+          navigation.navigate("Watchlist");
+        }}
+      />
     </View>
   );
 };
@@ -104,7 +205,7 @@ export default DetailsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 30,
+    paddingVertical: 30,
     paddingHorizontal: 24,
     backgroundColor: "#242A32",
   },
@@ -139,6 +240,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  descContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 8,
+    marginTop: 16,
+    marginBottom: 24,
+  },
   ratingText: {
     color: "#FF8700",
     fontFamily: "Montserrat-Font",
@@ -162,5 +270,47 @@ const styles = StyleSheet.create({
   },
   headerDescription: {
     flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  bottomHeaders: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+  },
+  headerText: {
+    fontSize: 20,
+    fontFamily: "Poppins-Regular",
+    color: "white",
+  },
+  indicator: {
+    position: "absolute",
+    bottom: -12,
+    height: 4,
+    borderRadius: 8,
+    backgroundColor: "#3A3F47",
+  },
+  bottomContent: {
+    marginTop: 35,
+  },
+  about: {
+    fontFamily: "Poppins-Regular",
+    fontWeight: "400",
+    fontSize: 14,
+    lineHeight: 18,
+    color: "white",
+  },
+  watchlistBtn: {
+    width: "90%",
+    alignSelf: "center",
+  },
+  descriptionText: {
+    fontFamily: "Montserrat-Font",
+    fontWeight: "500",
+    fontSize: 14,
+    letterSpacing: 0.12,
+    lineHeight: 14.63,
+    marginHorizontal: 8,
+    color: "#92929D",
   },
 });

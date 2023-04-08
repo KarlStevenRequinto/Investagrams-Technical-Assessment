@@ -73,9 +73,9 @@ const HomeScreen = () => {
   };
 
   const onRoutePress = (id) => {
-    console.log(id);
     navigation.navigate("Details", { id: id });
   };
+
   useEffect(() => {
     getPopular()
       .then((response) => response.json())
@@ -106,10 +106,6 @@ const HomeScreen = () => {
         });
         setTopRatedList(topRated);
       });
-  }, []);
-
-  useEffect(() => {
-    console.log(popularList);
   }, []);
 
   return (
@@ -179,6 +175,7 @@ const HomeScreen = () => {
             ]}
           />
         </View>
+
         {selectedButtonIndex === 0 ? (
           <View style={styles.bottomContent}>
             <FlatList
@@ -329,7 +326,7 @@ const styles = StyleSheet.create({
     height: 4,
     width: "33.33%",
     borderRadius: 8,
-    backgroundColor: "white",
+    backgroundColor: "#3A3F47",
   },
   bottomContent: {
     marginTop: 15,
