@@ -5,9 +5,10 @@ import {
   Animated,
   Pressable,
   Modal,
+  FlatList,
 } from "react-native";
 import { useEffect, useState, useRef, useContext } from "react";
-import { getMovieDetails } from "../../utils/api-calls";
+import { getMovieDetails, getReviews } from "../../utils/api-calls";
 import { Image } from "expo-image";
 import { WatchlistContext } from "../../../store/context";
 import PageHeader from "../../components/PageHeader";
@@ -26,6 +27,7 @@ const DetailsScreen = ({ route, navigation }) => {
 
   const [containerWidth, setContainerWidth] = useState(0);
   const [selectedButtonIndex, setSelectedButtonIndex] = useState(0);
+  const [reviews, setReviews] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [movieObj, setMovieObj] = useState({
     id: "",
@@ -42,6 +44,7 @@ const DetailsScreen = ({ route, navigation }) => {
   const buttonWidth = containerWidth / 2.6;
   const stars = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const movieIsWatchListed = watchListsCtx.ids.includes(movieId);
+  const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
 
   useEffect(() => {
     getMovieDetails(movieId)
@@ -62,6 +65,14 @@ const DetailsScreen = ({ route, navigation }) => {
       });
   }, []);
 
+  useEffect(() => {
+    getReviews(movieId)
+      .then((response) => response.json())
+      .then((result) => {
+        setReviews(result.results);
+      });
+  }, []);
+
   const handlePress = (index) => {
     setSelectedButtonIndex(index);
     Animated.timing(indicatorPosition, {
@@ -74,14 +85,49 @@ const DetailsScreen = ({ route, navigation }) => {
   const watchListStatusHandler = () => {
     console.log(movieIsWatchListed);
     if (movieIsWatchListed) {
-      console.log("delete was called")
       watchListsCtx.removeWatchList(movieId);
     } else {
-      console.log("add was called")
       watchListsCtx.addWatchList(movieId);
     }
   };
 
+  const RatingItem = ({ image, author, rating, content }) => {
+    return (
+      <View style={styles.reviewItemContainer}>
+        <Image
+          source={
+            image.substr(0, 6) !== "/https"
+              ? `${IMAGE_BASE_URL}w300${image}`
+              : image.substring(1)
+          }
+          contentFit="cover"
+          style={styles.authorImage}
+        />
+        <View
+          style={{
+            width: "100%",
+            paddingHorizontal: 12,
+          }}
+        >
+          <View style={{ flexDirection: "row", minWidth: 350 }}>
+            <Text style={styles.reviewTexts}>Author: {author}</Text>
+            <View style={{ flexDirection: "row", marginBottom: 12 }}>
+              <Text
+                style={[
+                  styles.reviewTexts,
+                  { marginLeft: 30, color: "#FF8700" },
+                ]}
+              >
+                Rating: {rating}
+              </Text>
+              <Star width={16} height={16} stroke="#FF8700" fill="none" />
+            </View>
+          </View>
+          <Text style={styles.reviewTexts}>{content}</Text>
+        </View>
+      </View>
+    );
+  };
   return (
     <View style={styles.container}>
       <PageHeader
@@ -95,7 +141,7 @@ const DetailsScreen = ({ route, navigation }) => {
       <View style={styles.posterContainer}>
         <View style={styles.coverPhotoContainer}>
           <Image
-            source={`https://image.tmdb.org/t/p/w500${movieObj?.coverPhoto}`}
+            source={`${IMAGE_BASE_URL}w500${movieObj?.coverPhoto}`}
             contentFit="cover"
             transition={500}
             style={styles.image}
@@ -165,14 +211,7 @@ const DetailsScreen = ({ route, navigation }) => {
             <Text style={styles.headerText}>Reviews</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              paddingHorizontal: 12,
-              borderRadius: 8,
-              borderWidth: 2,
-              borderColor: "#0296E5",
-            }}
+            style={styles.rateBtn}
             onPress={() => {
               setOpenModal(true);
             }}
@@ -204,11 +243,35 @@ const DetailsScreen = ({ route, navigation }) => {
             <Text style={styles.about}>{movieObj?.about}</Text>
           </View>
         ) : (
-          selectedButtonIndex === 1 && (
-            <View style={styles.bottomContent}>
-              <Text>selectedButtonIndex 2</Text>
+          selectedButtonIndex === 1 &&
+          (reviews.length === 0 ? (
+            <View
+              style={[
+                styles.bottomContent,
+                { justifyContent: "center", alignItems: "center" },
+              ]}
+            >
+              <Text style={styles.about}>
+                There are no reviews for this movie at the moment.
+              </Text>
             </View>
-          )
+          ) : (
+            <FlatList
+              data={reviews}
+              renderItem={(item, index) => {
+                const reviewItem = item.item;
+                return (
+                  <RatingItem
+                    image={reviewItem.author_details.avatar_path}
+                    author={reviewItem.author}
+                    rating={reviewItem.author_details.rating}
+                    content={reviewItem.content}
+                  />
+                );
+              }}
+              ItemSeparatorComponent={() => <View style={styles.separator} />}
+            />
+          ))
         )}
       </View>
 
@@ -231,18 +294,7 @@ const DetailsScreen = ({ route, navigation }) => {
             <View style={{ position: "absolute", top: -40 }}>
               <StarRating fill="#0296E5" />
               {/* rating number should be dynamic */}
-              <Text
-                style={{
-                  position: "absolute",
-                  top: "39%",
-                  left: "44%",
-                  fontSize: 20,
-                  color: "white",
-                  fontFamily: "Montserrat-Font",
-                }}
-              >
-                ?
-              </Text>
+              <Text style={styles.rateNumber}>?</Text>
             </View>
             <Text style={styles.rateThis}>RATE THIS</Text>
             <Text style={styles.ratingTitle}>{movieObj?.title}</Text>

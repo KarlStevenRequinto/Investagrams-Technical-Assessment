@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
   },
   bottomContent: {
     marginTop: 35,
+    flex: 1,
   },
   about: {
     fontFamily: "Poppins-Regular",
@@ -113,11 +114,10 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    minWidth:340,
+    minWidth: 340,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
     alignItems: "center",
-    
   },
   modalContent: {
     height: "30%",
@@ -137,20 +137,60 @@ const styles = StyleSheet.create({
     letterSpacing: 0.12,
     lineHeight: 16,
   },
-  ratingTitle:{
-    fontFamily:"Poppins-Regular",
-    fontWeight:"400",
-    color:"white",
-    fontSize:20,
-    marginBottom:20
+  ratingTitle: {
+    fontFamily: "Poppins-Regular",
+    fontWeight: "400",
+    color: "white",
+    fontSize: 20,
+    marginBottom: 20,
   },
-  ratingBtn:{
-    position:"absolute",
-    bottom:30,
-    height:36,
-    width:"65%",
-    minWidth:300
-  }
+  ratingBtn: {
+    position: "absolute",
+    bottom: 30,
+    height: 36,
+    width: "65%",
+    minWidth: 300,
+  },
+  rateBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: "#0296E5",
+  },
+  authorImage: {
+    width: 95,
+    height: 120,
+    minWidth: 80,
+    borderRadius: 16,
+  },
+  reviewItemContainer: {
+    flexDirection: "row",
+    marginVertical: 8,
+  },
+  reviewTexts: {
+    fontFamily: "Poppins-Regular",
+    fontSize: 12,
+    lineHeight: 18,
+    fontWeight: "400",
+    color: "white",
+    flexWrap: "wrap",
+    maxWidth: "90%",
+  },
+  separator: {
+    height: 1,
+    borderRadius: 2,
+    backgroundColor: "gray",
+  },
+  rateNumber: {
+    position: "absolute",
+    top: "39%",
+    left: "44%",
+    fontSize: 20,
+    color: "white",
+    fontFamily: "Montserrat-Font",
+  },
 });
 
 export default styles;

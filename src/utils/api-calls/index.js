@@ -48,8 +48,16 @@ const getMovieDetails = async (movieId) => {
 
 const getReviews = async (movieId) => {
   const response = await fetch(
-    `https://api.themoviedb.org/3/movie/76600/reviews?api_key=28ec9bff5cf02ca71524de9d46113f70&language=en-US&page=1`,
+    `${BASE_URL}/movie/${movieId}/reviews?${API_KEY}&language=en-US`,
     requestOptionsGet
   );
+  return response;
 };
-export { getTrending, getUpcoming, getPopular, getTopRated, getMovieDetails };
+export {
+  getTrending,
+  getUpcoming,
+  getPopular,
+  getTopRated,
+  getMovieDetails,
+  getReviews,
+};

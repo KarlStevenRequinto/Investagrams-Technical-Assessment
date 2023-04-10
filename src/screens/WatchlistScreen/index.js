@@ -67,7 +67,7 @@ const WatchlistScreen = () => {
             <Ticket width={16} height={16} stroke="white" />
             {genres.map((item, index) => {
               return (
-                <Text style={styles.detailText}>
+                <Text style={styles.detailText} key={index}>
                   {item.name}
                   {index !== genres.length - 1 && <Text>,</Text>}
                 </Text>
@@ -80,7 +80,7 @@ const WatchlistScreen = () => {
           </View>
           <View style={styles.details}>
             <Clock width={16} height={16} stroke="white" />
-            <Text style={styles.detailText}>{runtime}</Text>
+            <Text style={styles.detailText}>{runtime} minutes</Text>
           </View>
         </View>
       </View>
@@ -96,26 +96,25 @@ const WatchlistScreen = () => {
         }}
       />
 
-      <View style={{ marginTop: 32 }}>
-        <FlatList
-          data={watchListedMovies}
-          renderItem={(movie) => {
-            const item = movie.item;
-            return (
-              <MovieItem
-                image={item.poster}
-                title={item.title}
-                rating={item.rating}
-                genres={item.genres}
-                releaseDate={item.releaseDate}
-                runtime={item.runtime}
-              />
-              // <Text>{movie.item.title}</Text>
-            );
-          }}
-          keyExtractor={(item) => item.id + 1}
-        />
-      </View>
+      <FlatList
+        data={watchListedMovies}
+        renderItem={(movie) => {
+          const item = movie.item;
+          return (
+            <MovieItem
+              image={item.poster}
+              title={item.title}
+              rating={item.rating}
+              genres={item.genres}
+              releaseDate={item.releaseDate}
+              runtime={item.runtime}
+            />
+            // <Text>{movie.item.title}</Text>
+          );
+        }}
+        keyExtractor={(item) => item.id + 1}
+        style={{ marginTop: 32 }}
+      />
     </View>
   );
 };
@@ -130,6 +129,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   image: {
+    minWidth: 95,
     width: 95,
     height: 120,
     borderRadius: 16,
