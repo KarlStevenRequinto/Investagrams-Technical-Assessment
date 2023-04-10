@@ -43,6 +43,9 @@ const DetailsScreen = ({ route, navigation }) => {
   const indicatorPosition = useRef(new Animated.Value(0)).current;
   const buttonWidth = containerWidth / 2.6;
   const stars = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const [isStarHovered, setIsStarHovered] = useState(-1);
+  const [rating, setRating] = useState("?");
+  const [rateBtnDisabled, setRateBtnDisabled] = useState(true);
   const movieIsWatchListed = watchListsCtx.ids.includes(movieId);
   const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
 
@@ -82,6 +85,11 @@ const DetailsScreen = ({ route, navigation }) => {
     }).start();
   };
 
+  const rateMovie = (index) => {
+    setRating(index + 1);
+    console.log(index);
+  };
+
   const watchListStatusHandler = () => {
     console.log(movieIsWatchListed);
     if (movieIsWatchListed) {
@@ -91,6 +99,9 @@ const DetailsScreen = ({ route, navigation }) => {
     }
   };
 
+  const onSubmitMovieRating =(rating)=>{
+    console.log(rating)
+  }
   const RatingItem = ({ image, author, rating, content }) => {
     return (
       <View style={styles.reviewItemContainer}>
@@ -211,7 +222,7 @@ const DetailsScreen = ({ route, navigation }) => {
             <Text style={styles.headerText}>Reviews</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.rateBtn}
+            style={[styles.rateBtn]}
             onPress={() => {
               setOpenModal(true);
             }}
@@ -294,24 +305,59 @@ const DetailsScreen = ({ route, navigation }) => {
             <View style={{ position: "absolute", top: -40 }}>
               <StarRating fill="#0296E5" />
               {/* rating number should be dynamic */}
-              <Text style={styles.rateNumber}>?</Text>
+              <Text style={styles.rateNumber}>{rating}</Text>
             </View>
             <Text style={styles.rateThis}>RATE THIS</Text>
             <Text style={styles.ratingTitle}>{movieObj?.title}</Text>
             <View style={{ flexDirection: "row" }}>
               {stars.map((item, index) => {
+                const isFilled = index <= isStarHovered;
                 return (
-                  <Star
+                  <Pressable
+                    onPress={() => {
+                      setRateBtnDisabled(false);
+                      rateMovie(index);
+                    }}
                     key={index}
-                    width={30}
-                    height={30}
-                    stroke="white"
-                    fill="none"
-                  />
+                    onMouseEnter={() => {
+                      setIsStarHovered(index);
+                    }}
+                    onMouseLeave={() => {
+                      if (rating !== "?") {
+                        return;
+                      } else {
+                        setIsStarHovered(-1);
+                      }
+                    }}
+                  >
+                    <Star
+                      key={index}
+                      width={30}
+                      height={30}
+                      stroke={isFilled ? "#0296E5" : "white"}
+                      fill={isFilled ? "#0296E5" : "none"}
+                    />
+                  </Pressable>
                 );
               })}
             </View>
-            <CustomButton btnTitle="Rate" btnStyle={styles.ratingBtn} />
+            <CustomButton
+              btnTitle="Rate"
+              btnTextStyle={{ color: rateBtnDisabled ? "grey" : "black" }}
+              btnStyle={[
+                styles.ratingBtn,
+                {
+                  backgroundColor: rateBtnDisabled
+                    ? "hsla(0,0%,100%,.08)"
+                    : "#FFB81C",
+                },
+              ]}
+              disabled={rateBtnDisabled}
+              onPressHandler={() => {
+                onSubmitMovieRating(rating);
+                setOpenModal(false);
+              }}
+            />
           </View>
         </Pressable>
       </Modal>
