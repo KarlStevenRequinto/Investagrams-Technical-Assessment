@@ -45,7 +45,7 @@ const HomeTabs = () => {
 const RootNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="HomeTabs"
+      initialRouteName="Login"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Login" component={LogInScreen} />

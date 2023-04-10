@@ -117,7 +117,6 @@ const HomeScreen = () => {
     searchMovies(newText)
       .then((response) => response.json())
       .then((result) => {
-        console.log(result.results);
         setMoviesArray(result.results);
       });
   };

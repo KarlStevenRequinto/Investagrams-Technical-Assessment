@@ -33,10 +33,6 @@ const WatchlistScreen = () => {
       .catch((error) => console.log(error));
   }, [watchListsCtx.ids]);
 
-  useEffect(() => {
-    console.log(myWatchLists);
-  }, [myWatchLists]);
-
   const watchListedMovies = myWatchLists.filter((movie) =>
     watchListsCtx.ids.includes(movie.id)
   );

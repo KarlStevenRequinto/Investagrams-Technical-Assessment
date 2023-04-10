@@ -87,11 +87,9 @@ const DetailsScreen = ({ route, navigation }) => {
 
   const rateMovie = (index) => {
     setRating(index + 1);
-    console.log(index);
   };
 
   const watchListStatusHandler = () => {
-    console.log(movieIsWatchListed);
     if (movieIsWatchListed) {
       watchListsCtx.removeWatchList(movieId);
     } else {
@@ -102,6 +100,7 @@ const DetailsScreen = ({ route, navigation }) => {
   const onSubmitMovieRating =(rating)=>{
     console.log(rating)
   }
+  
   const RatingItem = ({ image, author, rating, content }) => {
     return (
       <View style={styles.reviewItemContainer}>

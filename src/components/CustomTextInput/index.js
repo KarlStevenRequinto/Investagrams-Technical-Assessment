@@ -16,7 +16,7 @@ const CustomTextInput = ({
   onTextChange,
 }) => {
   const [text, setText] = useState();
-  
+
   const handleTextChange = (newText) => {
     setText(newText);
     onTextChange && onTextChange(newText); // Call the onTextChange prop with the new text value
@@ -51,16 +51,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
     flexDirection: "row",
+    alignItems: "center",
   },
   iconContainer: {
-    position: "absolute",
-    right: 15,
-    bottom: 12,
     justifyContent: "center",
     alignItems: "center",
   },
   placeholderText: {
     fontFamily: "Poppins-Regular",
     color: "white",
+    flex: 1,
   },
 });

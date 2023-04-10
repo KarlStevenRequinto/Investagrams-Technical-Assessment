@@ -1,10 +1,21 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
-import BackArrow from "../../../assets/icons/Back-Arrow";
+import { useState } from "react";
 import CustomTextInput from "../../components/CustomTextInput";
 import CustomButton from "../../components/CustomButton";
 import Icon from "react-native-vector-icons/Entypo";
+
 const LogInScreen = ({ navigation }) => {
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+
+  const handleEmailEntry = (newText) => {
+    setEmail(newText);
+  };
+
+  const handlePasswordEntry = (newText) => {
+    setPassword(newText);
+  };
+
   return (
     <View style={styles.container}>
       <Image
@@ -13,7 +24,6 @@ const LogInScreen = ({ navigation }) => {
       />
       <View style={styles.loginSectionStyle}>
         <Pressable style={styles.headerContainer}>
-          <BackArrow width={30} height={30} fill={"white"} />
           <Text style={styles.headerText}>Login</Text>
         </Pressable>
         <Text style={styles.subText}>Enter your login credentials</Text>
@@ -21,7 +31,11 @@ const LogInScreen = ({ navigation }) => {
         <View style={styles.textInputContainer}>
           {/* EMAIL VALIDATION NEEDED */}
           <Text style={styles.textInputTitle}>Email</Text>
-          <CustomTextInput placeholder="Enter your email" width={"100%"} />
+          <CustomTextInput
+            placeholder="Enter your email"
+            width={"100%"}
+            onTextChange={handleEmailEntry}
+          />
         </View>
         <View style={styles.textInputContainer}>
           {/* PASSWORD VALIDATION NEEDED */}
@@ -34,6 +48,7 @@ const LogInScreen = ({ navigation }) => {
               <Icon name="eye-with-line" size={20} color="white" />
             }
             width={"100%"}
+            onTextChange={handlePasswordEntry}
           />
         </View>
         <View style={styles.btnContainer}>
@@ -41,7 +56,12 @@ const LogInScreen = ({ navigation }) => {
             btnTitle={"Login"}
             btnStyle={styles.loginBtnStyle}
             onPressHandler={() => {
-              navigation.navigate("HomeTabs");
+              // TEMPORARY SOLUTION FOR LOGIN
+              if (email && password) {
+                navigation.navigate("HomeTabs");
+              } else {
+                return;
+              }
             }}
           />
         </View>
@@ -86,13 +106,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     letterSpacing: 0.5,
     color: "white",
-    paddingLeft: 12,
   },
   subText: {
     marginVertical: 8,
     color: "#3A3F47",
     fontFamily: "Poppins-Regular",
-    marginLeft: 45,
   },
   textInputTitle: {
     color: "white",
