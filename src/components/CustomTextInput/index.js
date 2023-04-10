@@ -14,6 +14,7 @@ const CustomTextInput = ({
   textInputContainerStyle,
   width,
   onTextChange,
+  secureTextEntry,
 }) => {
   const [text, setText] = useState();
 
@@ -33,6 +34,7 @@ const CustomTextInput = ({
           Platform.select({ web: { outlineWidth: 0 } }),
         ]}
         onChangeText={handleTextChange}
+        secureTextEntry={secureTextEntry}
       />
 
       {iconPlaceholder && (

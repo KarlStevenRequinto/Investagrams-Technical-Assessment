@@ -1,4 +1,11 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useState } from "react";
 import CustomTextInput from "../../components/CustomTextInput";
 import CustomButton from "../../components/CustomButton";
@@ -7,7 +14,7 @@ import Icon from "react-native-vector-icons/Entypo";
 const LogInScreen = ({ navigation }) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-
+  const [passwordHidden, setPasswordHidden] = useState(true);
   const handleEmailEntry = (newText) => {
     setEmail(newText);
   };
@@ -45,10 +52,21 @@ const LogInScreen = ({ navigation }) => {
           <CustomTextInput
             placeholder="Enter your password"
             iconPlaceholder={
-              <Icon name="eye-with-line" size={20} color="white" />
+              <TouchableOpacity
+                onPress={() => {
+                  setPasswordHidden(!passwordHidden);
+                }}
+              >
+                <Icon
+                  name={passwordHidden ? "eye-with-line" : "eye"}
+                  size={20}
+                  color="grey"
+                />
+              </TouchableOpacity>
             }
             width={"100%"}
             onTextChange={handlePasswordEntry}
+            secureTextEntry={passwordHidden}
           />
         </View>
         <View style={styles.btnContainer}>
