@@ -15,6 +15,7 @@ import {
   getUpcoming,
   getPopular,
   getTopRated,
+  searchMovies,
 } from "../../utils/api-calls";
 import { useNavigation } from "@react-navigation/native";
 
@@ -25,6 +26,7 @@ const HomeScreen = () => {
   const [topRatedList, setTopRatedList] = useState([]);
   const [selectedButtonIndex, setSelectedButtonIndex] = useState(0);
   const [containerWidth, setContainerWidth] = useState(0);
+  const [moviesArray, setMoviesArray] = useState([]);
   const indicatorPosition = useRef(new Animated.Value(0)).current;
 
   const buttonWidth = containerWidth / 3;
@@ -108,6 +110,50 @@ const HomeScreen = () => {
       });
   }, []);
 
+  const [text, setText] = useState("");
+
+  const handleTextChange = (newText) => {
+    setText(newText);
+    searchMovies(newText)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result.results);
+        setMoviesArray(result.results);
+      });
+  };
+
+  const SearchedMovies = (movie) => {
+    const item = movie.movie;
+    const movieItem = {
+      id: item.id,
+      title: item.original_title,
+      image: item.poster_path,
+      releaseDate: item.release_date.split("-")[0],
+    };
+
+    return (
+      <Pressable
+        style={styles.searchMoviesContainer}
+        onPress={() => {
+          onRoutePress(movieItem.id);
+        }}
+      >
+        <Image
+          source={`https://image.tmdb.org/t/p/w300/${movieItem.image}`}
+          contentFit="cover"
+          transition={500}
+          style={styles.searchMovieImage}
+        />
+        <Text style={[styles.titleHeader, { fontSize: 12 }]}>
+          {movieItem.title}
+        </Text>
+        <Text style={{ color: "#919191", fontFamily: "Poppins-Regular" }}>
+          {movieItem.releaseDate}
+        </Text>
+      </Pressable>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.titleHeader}>What do you want to watch?</Text>
@@ -117,143 +163,161 @@ const HomeScreen = () => {
         textInputContainerStyle={styles.textInputStyle}
         placeholder="Search"
         width={"100%"}
+        onTextChange={handleTextChange}
       />
-      <View style={styles.trendingContainer}>
-        <Text style={[styles.titleHeader, { fontSize: 14, fontWeight: "400" }]}>
-          What's trending right now?
-        </Text>
-
+      {text.length !== 0 ? (
         <FlatList
-          data={trendingList}
-          renderItem={({ item, index }) => {
-            return (
-              <TouchableOpacity
-                style={styles.imageContainer}
-                onPress={() => {
-                  onRoutePress(item.id);
-                }}
-              >
-                <Image
-                  source={`https://image.tmdb.org/t/p/w500/${item.backdrop}`}
-                  contentFit="cover"
-                  transition={500}
-                  style={styles.image}
-                />
-                <Text style={styles.imgIndex}>{index + 1}</Text>
-              </TouchableOpacity>
-            );
+          data={moviesArray}
+          renderItem={(item, index) => {
+            return <SearchedMovies movie={item.item} />;
           }}
-          horizontal
           keyExtractor={(item) => item.id}
+          numColumns={2}
         />
-      </View>
+      ) : (
+        <View>
+          <View style={styles.trendingContainer}>
+            <Text
+              style={[styles.titleHeader, { fontSize: 14, fontWeight: "400" }]}
+            >
+              What's trending right now?
+            </Text>
 
-      <View
-        style={styles.listsContainer}
-        onLayout={(event) => setContainerWidth(event.nativeEvent.layout.width)}
-      >
-        <View style={styles.bottomHeaders}>
-          <TouchableOpacity onPress={() => handlePress(0)}>
-            <Text style={styles.headerText}>Upcoming</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handlePress(1)}>
-            <Text style={styles.headerText}>Popular</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handlePress(2)}>
-            <Text style={styles.headerText}>Top Rated</Text>
-          </TouchableOpacity>
-          <Animated.View
-            style={[
-              styles.indicator,
-              {
-                width: buttonWidth,
-                left: indicatorPosition.interpolate({
-                  inputRange: [0, 1, 2],
-                  outputRange: [0, buttonWidth, buttonWidth * 2],
-                }),
-              },
-            ]}
-          />
+            <FlatList
+              data={trendingList}
+              renderItem={({ item, index }) => {
+                return (
+                  <TouchableOpacity
+                    style={styles.imageContainer}
+                    onPress={() => {
+                      onRoutePress(item.id);
+                    }}
+                  >
+                    <Image
+                      source={`https://image.tmdb.org/t/p/w500/${item.backdrop}`}
+                      contentFit="cover"
+                      transition={500}
+                      style={styles.image}
+                    />
+                    <Text style={styles.imgIndex}>{index + 1}</Text>
+                  </TouchableOpacity>
+                );
+              }}
+              horizontal
+              keyExtractor={(item) => item.id}
+            />
+          </View>
+
+          <View
+            style={styles.listsContainer}
+            onLayout={(event) =>
+              setContainerWidth(event.nativeEvent.layout.width)
+            }
+          >
+            <View style={styles.bottomHeaders}>
+              <TouchableOpacity onPress={() => handlePress(0)}>
+                <Text style={styles.headerText}>Upcoming</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handlePress(1)}>
+                <Text style={styles.headerText}>Popular</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handlePress(2)}>
+                <Text style={styles.headerText}>Top Rated</Text>
+              </TouchableOpacity>
+              <Animated.View
+                style={[
+                  styles.indicator,
+                  {
+                    width: buttonWidth,
+                    left: indicatorPosition.interpolate({
+                      inputRange: [0, 1, 2],
+                      outputRange: [0, buttonWidth, buttonWidth * 2],
+                    }),
+                  },
+                ]}
+              />
+            </View>
+
+            {selectedButtonIndex === 0 ? (
+              <View style={styles.bottomContent}>
+                <FlatList
+                  data={upcomingList}
+                  renderItem={({ item }) => {
+                    return (
+                      <TouchableOpacity
+                        style={{ marginRight: 10, marginTop: 10 }}
+                        onPress={() => {
+                          onRoutePress(item.id);
+                        }}
+                      >
+                        <Image
+                          source={`https://image.tmdb.org/t/p/w500/${item.backdrop}`}
+                          contentFit="cover"
+                          transition={500}
+                          style={{ width: 100, height: 200, borderRadius: 12 }}
+                        />
+                      </TouchableOpacity>
+                    );
+                  }}
+                  horizontal
+                  keyExtractor={(item) => item.id}
+                />
+              </View>
+            ) : selectedButtonIndex === 1 ? (
+              <View style={styles.bottomContent}>
+                <FlatList
+                  data={popularList}
+                  renderItem={({ item }) => {
+                    return (
+                      <TouchableOpacity
+                        style={{ marginRight: 10, marginTop: 10 }}
+                        onPress={() => {
+                          onRoutePress(item.id);
+                        }}
+                      >
+                        <Image
+                          source={`https://image.tmdb.org/t/p/w500/${item.backdrop}`}
+                          contentFit="cover"
+                          transition={500}
+                          style={{ width: 100, height: 200, borderRadius: 12 }}
+                        />
+                      </TouchableOpacity>
+                    );
+                  }}
+                  horizontal
+                  keyExtractor={(item) => item.id}
+                />
+              </View>
+            ) : (
+              <View style={styles.bottomContent}>
+                <FlatList
+                  data={topRatedList}
+                  renderItem={({ item }) => {
+                    return (
+                      <TouchableOpacity
+                        style={{ marginRight: 10, marginTop: 10 }}
+                        onPress={() => {
+                          onRoutePress(item.id);
+                        }}
+                      >
+                        <Image
+                          source={`https://image.tmdb.org/t/p/w500/${item.backdrop}`}
+                          contentFit="cover"
+                          transition={500}
+                          style={{ width: 150, height: 200, borderRadius: 12 }}
+                        />
+                        {/* STARS FOR RATINGS */}
+                      </TouchableOpacity>
+                    );
+                  }}
+                  horizontal
+                  keyExtractor={(item) => item.id}
+                />
+              </View>
+            )}
+          </View>
         </View>
-
-        {selectedButtonIndex === 0 ? (
-          <View style={styles.bottomContent}>
-            <FlatList
-              data={upcomingList}
-              renderItem={({ item }) => {
-                return (
-                  <TouchableOpacity
-                    style={{ marginRight: 10, marginTop: 10 }}
-                    onPress={() => {
-                      onRoutePress(item.id);
-                    }}
-                  >
-                    <Image
-                      source={`https://image.tmdb.org/t/p/w500/${item.backdrop}`}
-                      contentFit="cover"
-                      transition={500}
-                      style={{ width: 100, height: 200, borderRadius: 12 }}
-                    />
-                  </TouchableOpacity>
-                );
-              }}
-              horizontal
-              keyExtractor={(item) => item.id}
-            />
-          </View>
-        ) : selectedButtonIndex === 1 ? (
-          <View style={styles.bottomContent}>
-            <FlatList
-              data={popularList}
-              renderItem={({ item }) => {
-                return (
-                  <TouchableOpacity
-                    style={{ marginRight: 10, marginTop: 10 }}
-                    onPress={() => {
-                      onRoutePress(item.id);
-                    }}
-                  >
-                    <Image
-                      source={`https://image.tmdb.org/t/p/w500/${item.backdrop}`}
-                      contentFit="cover"
-                      transition={500}
-                      style={{ width: 100, height: 200, borderRadius: 12 }}
-                    />
-                  </TouchableOpacity>
-                );
-              }}
-              horizontal
-              keyExtractor={(item) => item.id}
-            />
-          </View>
-        ) : (
-          <View style={styles.bottomContent}>
-            <FlatList
-              data={topRatedList}
-              renderItem={({ item }) => {
-                return (
-                  <TouchableOpacity
-                    style={{ marginRight: 10, marginTop: 10 }}
-                    onPress={() => {
-                      onRoutePress(item.id);
-                    }}
-                  >
-                    <Image
-                      source={`https://image.tmdb.org/t/p/w500/${item.backdrop}`}
-                      contentFit="cover"
-                      transition={500}
-                      style={{ width: 150, height: 200, borderRadius: 12 }}
-                    />
-                    {/* STARS FOR RATINGS */}
-                  </TouchableOpacity>
-                );
-              }}
-              horizontal
-              keyExtractor={(item) => item.id}
-            />
-          </View>
-        )}
-      </View>
+      )}
     </View>
   );
 };
@@ -297,6 +361,12 @@ const styles = StyleSheet.create({
     height: 400,
     borderRadius: 16,
   },
+  searchMovieImage: {
+    width: "100%",
+    height: 300,
+    minWidth: 100,
+    borderRadius: 16,
+  },
   imgIndex: {
     position: "absolute",
     bottom: 0,
@@ -304,12 +374,10 @@ const styles = StyleSheet.create({
     fontSize: 150,
     fontFamily: "Poppins-Regular",
     lineHeight: 150,
-    // backgroundColor: "red",
   },
   bottomHeaders: {
     marginTop: 5,
     flexDirection: "row",
-    // backgroundColor: "yellow",
     alignItems: "center",
     justifyContent: "space-around",
   },
@@ -329,5 +397,11 @@ const styles = StyleSheet.create({
   bottomContent: {
     marginTop: 15,
     // backgroundColor: "skyblue",
+  },
+  searchMoviesContainer: {
+    flex: 1,
+    margin: 4,
+    padding: 2,
+    minWidth: 150,
   },
 });

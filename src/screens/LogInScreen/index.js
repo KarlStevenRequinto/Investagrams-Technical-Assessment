@@ -4,7 +4,7 @@ import BackArrow from "../../../assets/icons/Back-Arrow";
 import CustomTextInput from "../../components/CustomTextInput";
 import CustomButton from "../../components/CustomButton";
 import Icon from "react-native-vector-icons/Entypo";
-const LogInScreen = () => {
+const LogInScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image
@@ -37,7 +37,13 @@ const LogInScreen = () => {
           />
         </View>
         <View style={styles.btnContainer}>
-          <CustomButton btnTitle={"Login"} btnStyle={styles.loginBtnStyle} />
+          <CustomButton
+            btnTitle={"Login"}
+            btnStyle={styles.loginBtnStyle}
+            onPressHandler={() => {
+              navigation.navigate("HomeTabs");
+            }}
+          />
         </View>
       </View>
     </View>

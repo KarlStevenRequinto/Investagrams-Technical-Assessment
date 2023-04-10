@@ -53,6 +53,14 @@ const getReviews = async (movieId) => {
   );
   return response;
 };
+
+const searchMovies = async (text) => {
+  const response = await fetch(
+    `${BASE_URL}/search/movie?${API_KEY}&language=en-US&page=1&include_adult=false&query=${text}`,
+    requestOptionsGet
+  );
+  return response;
+};
 export {
   getTrending,
   getUpcoming,
@@ -60,4 +68,5 @@ export {
   getTopRated,
   getMovieDetails,
   getReviews,
+  searchMovies,
 };

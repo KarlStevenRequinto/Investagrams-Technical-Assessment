@@ -1,20 +1,40 @@
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import React from "react";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Platform,
+} from "react-native";
+import { useState } from "react";
 
 const CustomTextInput = ({
   placeholder,
   iconPlaceholder,
   textInputContainerStyle,
   width,
+  onTextChange,
 }) => {
+  const [text, setText] = useState();
+  
+  const handleTextChange = (newText) => {
+    setText(newText);
+    onTextChange && onTextChange(newText); // Call the onTextChange prop with the new text value
+  };
+
   return (
     <View style={[styles.container, textInputContainerStyle]}>
       <TextInput
         placeholder={placeholder}
         placeholderTextColor={"#67686D"}
-        style={[styles.placeholderText, { width: width }]}
+        style={[
+          styles.placeholderText,
+          { width: width },
+          Platform.select({ web: { outlineWidth: 0 } }),
+        ]}
+        onChangeText={handleTextChange}
       />
-    
+
       {iconPlaceholder && (
         <Pressable style={styles.iconContainer}>{iconPlaceholder}</Pressable>
       )}
@@ -35,7 +55,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     position: "absolute",
     right: 15,
-    bottom:12,
+    bottom: 12,
     justifyContent: "center",
     alignItems: "center",
   },
